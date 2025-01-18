@@ -6,5 +6,5 @@ const file = path.join(__dirname, fileName);
 
 const rs = fs.createReadStream(file);
 rs.on('data', (stream) => {
-    const res = process.stdout.write(stream);
+  process.stdout.write(stream);
 });
