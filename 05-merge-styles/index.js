@@ -27,7 +27,7 @@ async function cssBundle(source, dest, file) {
             // })
             rs.pipe(bundleStream);
           }
-        })
+        });
       }
     });
   } catch (error) {
