@@ -1,5 +1,5 @@
 const path = require('node:path');
-// const fsp = require('node:fs/promises');
+const fsp = require('node:fs/promises');
 const fs = require('node:fs');
 
 const source = 'styles';
@@ -14,6 +14,7 @@ async function cssBundle(source, dest, file) {
   const bundle = path.join(dest, file);
   let bundleStream;
   try {
+    await fsp.mkdir(dest, { recursive: true });
     bundleStream = fs.createWriteStream(bundle);
     fs.readdir(source, { withFileTypes: true }, (err, files) => {
       if (!err) {
@@ -22,9 +23,6 @@ async function cssBundle(source, dest, file) {
           if (path.extname(fileFullPath) === '.css') {
             const rs = fs.createReadStream(fileFullPath);
             rs.setEncoding('utf-8');
-            // rs.on('data', (chunk) => {
-            //   bundleStream.write(chunk);
-            // })
             rs.pipe(bundleStream);
           }
         });
