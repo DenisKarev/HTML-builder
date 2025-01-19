@@ -11,10 +11,10 @@ copyFiles(sourcePath, destPath).catch((err) => console.log(err));
 async function copyFiles(source, dest) {
   let sourceFiles, dir, destFiles;
   try {
-    sourceFiles = await fsp.readdir(sourcePath, { withFileTypes: true });
-    dir = await fsp.mkdir(destPath, { recursive: true });
+    sourceFiles = await fsp.readdir(source, { withFileTypes: true });
+    dir = await fsp.mkdir(dest, { recursive: true });
     if (dir == undefined) {
-      destFiles = await fsp.readdir(destPath, { withFileTypes: true });
+      destFiles = await fsp.readdir(dest, { withFileTypes: true });
     }
   } catch (error) {
     console.log(error);
@@ -31,18 +31,20 @@ async function copyFiles(source, dest) {
       }
     }
   });
-  destFiles.forEach(async (file) => {
-    const destFilePath = path.join(dest, file.name);
-    const stat = await fsp.stat(destFilePath);
-    if (
-      stat.isFile() &&
-      sourceFiles.findIndex((e) => e.name === file.name) === -1
-    ) {
-      try {
-        await fsp.rm(destFilePath);
-      } catch (error) {
-        console.log(error);
+  if (dir === undefined) {
+    destFiles.forEach(async (file) => {
+      const destFilePath = path.join(dest, file.name);
+      const stat = await fsp.stat(destFilePath);
+      if (
+        stat.isFile() &&
+        sourceFiles.findIndex((e) => e.name === file.name) === -1
+      ) {
+        try {
+          await fsp.rm(destFilePath);
+        } catch (error) {
+          console.log(error);
+        }
       }
-    }
-  });
+    });
+  }
 }

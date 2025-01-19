@@ -12,13 +12,13 @@ cssBundle(sourcePath, projectPath, bundleFN);
 
 async function cssBundle(source, dest, file) {
   const bundle = path.join(dest, file);
-  let sourceFiles, bundleStream;
+  let bundleStream;
   try {
     bundleStream = fs.createWriteStream(bundle);
     fs.readdir(source, { withFileTypes: true }, (err, files) => {
       if (!err) {
         files.forEach((file) => {
-          const fileFullPath = path.join(sourcePath, file.name);
+          const fileFullPath = path.join(source, file.name);
           if (path.extname(fileFullPath) === '.css') {
             const rs = fs.createReadStream(fileFullPath);
             rs.setEncoding('utf-8');
